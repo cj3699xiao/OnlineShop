@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>-->
+</head>
+</head>
+<body>
+<h1>Data Communication + Life Cycle</h1>
+<div id="app"></div>
+<hr>
+<div id="mytest"></div>
+
+<script type="text/babel">
+    // components: class based + fn based => state ?
+
+    // 1. Data Communication
+    //  - passing data parent -> child
+    //  - use props:
+    //      step1: Child instance -> define key=value
+    //      step2: Child component -> use props[key]
+    //  - passing data child -> parent
+    //      step1: Child instance -> define key=fn
+    //      step2: Parent component -> define fn
+    //      step3: Child component -> call fn -> pass value as parameter
+    //  - passing data sibling <-> sibling
+    //      LCA: child -> parent + parent -> child
+    class Parent extends React.Component {
+        state = {
+            a: 10,
+            b: "hello"
+        }
+
+        // required
+        render() {
+            const { a, b } = this.state;
+            // jsx
+            return <div>
+                <h2>Parent Component</h2>
+                <h3>my data: { a }</h3>
+                <hr/>
+                <Child valueFromParent={a}
+                       changeData={this.changeFn}
+                />
+            </div>
+        }
+
+        changeFn = (data) => {
+            // step1: get data from child
+            console.log(data);
+            // step2: update state
+            this.setState(preState => {
+                console.log('prestate -> ', preState);
+                return {
+                    a: preState.a + data
+                }
+            })
+        }
+    }
+
+    // class Parent2 extends React.Component {
+    //     state = {
+    //         first: "string",
+    //         second:  10086
+    //     }
+    //
+    //     render() {
+    //         return <div>
+    //             {this.state.first}
+    //             <hr/>
+    //         </div>
+    //     }
+    // }
+
+
+    class Child extends React.Component {
+        state = {
+            num: 100
+        }
+        render() {
+            // console.log(this.props);
+            const { valueFromParent} = this.props;
+            const { num } = this.state;
+            // return <div>Child Component</div>
+            return <div>
+                <h2>Child Component</h2>
+                <h3>Data from Parent: { valueFromParent }</h3>
+                <h3>My data: { num }</h3>
+                <button onClick={
+                    () => {
+                        // this.setState(pre => ({num: pre.num + 10}))
+                        this.setState( pre => {
+                            return {
+                                num: pre.num + 10
+                            }
+                        });
+                        // wrong props -> ready-only
+                       // this.props.valueFromParent = this.props.valueFromParent + 10;
+                        // use props.changeFn
+                        this.props.changeData(99)
+                    }
+                }>click me + 10</button>
+            </div>
+        }
+    }
+
+    // class GrandChild extends React.Component {
+    //     render() {
+    //         return <div>GrandChild Component</div>
+    //     }
+    // }
+
+    // 2. Life Cycle
+    //  - life cycle vs life cycle function
+    //  - 3 stages: mounting updating unmounting
+
+    // class Parent extends React.Component {
+    //     constructor() {
+    //         super();
+    //         this.state = {
+    //             isShow: false,
+    //             str: 'hello'
+    //         };
+    //         console.log('parent constructor')
+    //     }
+    //
+    //     render() {
+    //         console.log('parent render')
+    //         return <div>
+    //             <h2>This is Parent Component</h2>
+    //             <button onClick={ () => {
+    //                 this.setState(pre => ({isShow: !pre.isShow}))
+    //             }}>show / hide Child Component</button>
+    //
+    //             <button onClick={ () => {
+    //                 this.setState({str: "haha"})
+    //             }}>change str</button>
+    //             <hr/>
+    //             {
+    //                 this.state.isShow ? <Child str={this.state.str}/> : null
+    //             }
+    //         </div>
+    //     }
+    // }
+    //
+    // class Child extends React.Component {
+    //     render() {
+    //         console.log('child render')
+    //         return <div>
+    //             <h3>This is Child Component</h3>
+    //             <p>data: {this.state.data}</p>
+    //             <p>str from parent: { this.props.str }</p>
+    //
+    //             <button onClick={
+    //                 () => {
+    //                     this.setState(pre => ({data: pre.data + 100}))
+    //                 }
+    //             }>click me</button>
+    //         </div>
+    //     }
+    //
+    //     constructor() {
+    //         super();
+    //         console.log('child constructor');
+    //         this.state = {
+    //             data: 10
+    //         }
+    //     }
+    //
+    //     componentDidMount() {
+    //         console.log('child didMount')
+    //         // fetch data from server
+    //         // access dom
+    //     }
+    // }
+
+    ReactDOM.render(
+        <Parent />,
+        document.getElementById('app')
+    )
+
+
+    ReactDOM.render(
+        <Parent2 />,
+        document.getElementById('mytest')
+    )
+
+
+</script>
+</body>
+</html>

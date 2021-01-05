@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello Redux</h1>
+<h2></h2>
+
+<button class="add">+ 10</button>
+<button class="minus">- 10</button>
+
+
+<script type="text/javascript">
+    // redux
+
+    // step1: create reducer - fn - define rules
+    function reducer(state = { a: 1000 }, action) {
+        //list all rules
+        if(action.type === '+') {
+            return { a: state.a + 10 };
+        } else if (action.type === '-') {
+            return { a: state.a - 10 }
+        }
+        return state;
+    }
+    // step2: create a store
+    var store = Redux.createStore(reducer); // ? init store
+
+    // step3: render view
+    function render() {
+        // data <-> ui
+        // ui
+        var h2 = document.getElementsByTagName('h2')[0];
+        // data
+        var data = store.getState().a;
+        // data <-> ui
+        h2.innerHTML = data;
+    }
+
+    store.subscribe(render);
+    render();
+
+    var oAddBtn = document.getElementsByClassName('add')[0],
+        oMinusBtn = document.getElementsByClassName('minus')[0];
+
+    // dispatch actions
+    oAddBtn.addEventListener('click', function() {
+        console.log('click');
+        store.dispatch({ type: '+'});
+    }, false);
+
+    oMinusBtn.addEventListener('click', function() {
+        console.log('click');
+        store.dispatch({ type: '-'});
+    }, false);
+</script>
+</body>
+</html>

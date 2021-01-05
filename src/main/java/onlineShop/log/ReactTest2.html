@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+</head>
+<body>
+<h1>React Components + Event</h1>
+<div id="app"></div>
+
+<div id="box" style="height: 20px; width: 20px; background-color: #23b6ff"></div>
+<button id="btn">click me !!!</button>
+
+<script>
+    var btn = document.getElementById('btn'),
+        box = document.getElementById('box');
+
+    var value = 20;
+    btn.addEventListener('click', function() {
+        console.log(1);
+        // change value
+        value += 10;
+
+        // manually  view -> data
+        box.style.height = value + 'px';
+        box.style.width = value + 'px';
+    })
+</script>
+<script type="text/babel">
+    // // 1. components -> function + class
+    // // 1.1 function component
+    // function Hello (props) {
+    //     console.log(props);
+    //     const { person: {name, age}} = props;
+    //     // const { name, age } = person;
+    //     // return jsx - v-element
+    //     return <div>
+    //         <h1>Hello</h1>
+    //         <h2>{name}</h2>
+    //         <h2>{age}</h2>
+    //     </div>
+    //
+    // }
+    // const person = {name: 'snoopy', age: 10};
+    // // how to know fn component vs function
+    // //  - based on return value
+    // ReactDOM.render(
+    //     <Hello person={person} data="100" />,
+    //     document.getElementById('app')
+    // )();
+
+    // 1.2 class component
+    // class Hello extends React.Component{
+    //     constructor() {
+    //         super();
+    //     }
+    //     // required
+    //     render() {
+    //         console.log(this.props);
+    //         return <h1>{this.props.age}</h1>
+    //     }
+    // }
+
+    // 1.3 fn component vs class component
+    // fn - state x     lifecycle x    -> stateless component
+    // class - state y  lifecycle y    -> state component
+
+    // 2. state
+    // 2.1 what is a state? -> class based
+    // 2.2 how to use a state?
+    //  how to define - keyword state - cannot change the name
+    //      state = {obj: value}
+    //  how to read
+    //      this.state.obj
+    //  how to change
+    //      - trigger an event
+    //      - setState()
+    //          - update state.obj.value
+    //          - trigger render fn
+
+    // class App extends React.Component {
+    //     // method1: define state
+    //     // constructor() {
+    //     //     super();
+    //     //     this.state = {
+    //     //         a: 100,
+    //     //         b: "hello app"
+    //     //     };
+    //     //     this.changeValue = this.changeValue.bind(this);
+    //     // }
+    //
+    //     // method2: define state
+    //     state = {
+    //         a: 100,
+    //         b: "hello app"
+    //     }
+    //
+    //     changeValue() {
+    //         console.log(this);
+    //         // with this and #2, this will point to caller that is the button in V-dom. which is null!
+    //         this.setState({ a: this.state.a + 10})
+    //     }
+    //
+    //     render() {
+    //         return <div>
+    //             <h2>{ this.state.a }</h2>
+    //             {
+    //                 // <button onClick={() => {
+    //                 //     // change state.a
+    //                 //     // this.state.a = this.state.a + 10;
+    //                 //     // console.log('state -> ', this.state.a);
+    //                 //     this.setState({ a: this.state.a + 10})
+    //                 // }}>click me + 10</button>
+    //                 <button onClick={this.changeValue}>click me</button>  // #2
+    //             }
+    //
+    //
+    //         </div>
+    //     }
+    // }
+    //
+    // ReactDOM.render(
+    //     <App />,
+    //     document.getElementById('app')
+    // )
+    //
+
+
+    // setState
+    // class App2 extends React.Component {
+    //     state = {
+    //         a: 10,
+    //         msg: ''
+    //     }
+    //
+    //     change = () => {
+    //         console.log(this);
+    //         // this.setState({ a: this.state.a + 10});
+    //         // this.setState({ msg: `current a is ${this.state.a}`})
+    //         this.setState(pre => ({
+    //             a: pre.a + 10
+    //         }))
+    //         this.setState(preState => ({
+    //             msg: `current a is ${preState.a}`
+    //         }))
+    //         //here, pre/preState is this!
+    //         // this.setState(cb)
+    //     }
+    //
+    //     render() {
+    //         return <div>
+    //             <h2>a: {this.state.a}</h2>
+    //             <h2>message: {this.state.msg}</h2>
+    //
+    //             <button onClick={this.change}>click me + a</button>
+    //         </div>
+    //     }
+    // }
+    //
+    // ReactDOM.render(
+    //     <App2 />,
+    //     document.getElementById('app')
+    // )
+
+    //MVVM - model view-model view
+    // data <-> view
+    // state.size -> font-size
+
+    class App3 extends React.Component {
+        state = {
+            size: 12
+        }
+        render() {
+            return <div>
+                <p style={{fontSize: this.state.size}}>hehe</p>
+                <button onClick={() => {
+                    this.setState({size: this.state.size + 10})
+                }}>click me +</button>
+            </div>
+        }
+    }
+    ReactDOM.render(
+        <App3 />,
+        document.getElementById('app')
+    )
+
+    // js
+    // 3 method: onclick addEventListener <tag onclick>
+
+</script>
+</body>
+</html>

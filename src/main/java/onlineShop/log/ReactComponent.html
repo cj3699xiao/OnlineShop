@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="text/babel">
+    class Hobbies extends React.Component {
+        state = {
+            hobbies: ["swimming", "football", "soccer", "running", "baseball"],
+            selected: []
+        }
+
+        render() {
+            const { hobbies, selected } = this.state;
+
+            return <div>
+                <p>Your hobbies:</p>
+                <p>
+                    {
+                        hobbies.map( hobby => {
+                            return (
+                                <label>
+                                    { hobby }
+                                    <input type="checkbox"
+                                           checked={ selected.includes(hobby) }
+                                           onChange={
+                                               e => {
+                                                   // case1: add
+                                                   if(e.target.checked) {
+                                                       this.addItem(hobby);
+                                                   }
+                                                   // case2: remove
+                                                   else {
+                                                       this.removeItem(hobby)
+                                                   }
+                                               }
+                                           }
+                                    />
+                                </label>
+                            )
+                        })
+                    }
+                </p>
+                <p>Selected: { selected.join(", ") }</p>
+            </div>
+        }
+        // render() {
+        //     // jsx
+        //     return <div>
+        //             <p>Your hobbies:</p>
+        //             <p>
+        //                 <label>
+        //                     swimming
+        //                     <input type="checkbox"
+        //                            checked={
+        //                                this.state.hobbies.includes("swimming")
+        //                            }
+        //                            onChange={
+        //                                e => {
+        //                                    // case1: add
+        //                                    if(e.target.checked) {
+        //                                        this.addItem("swimming");
+        //                                    }
+        //                                    // case2: remove
+        //                                    else {
+        //                                        this.removeItem("swimming")
+        //                                    }
+        //                                }
+        //                            }
+        //                     />
+        //                 </label>
+        //                 <label>
+        //                     running
+        //                     <input type="checkbox"/>
+        //                 </label>
+        //                 <label>
+        //                     baseball
+        //                     <input type="checkbox"/>
+        //                 </label>
+        //                 <label>
+        //                     football
+        //                     <input type="checkbox"/>
+        //                 </label>
+        //             </p>
+        //
+        //             <p>{ this.state.hobbies.join(", ") }</p>
+        //         </div>
+        // }
+
+        addItem = (item) => {
+            this.setState({
+                selected: [...this.state.selected, item]
+            })
+        }
+
+        removeItem = (item) => {
+            this.setState({
+                selected: this.state.selected.filter( hobby => hobby !== item )
+            })
+        }
+    }
+
+    ReactDOM.render(
+        <Hobbies />,
+        document.getElementById("app")
+    )
+</script>
+</body>
+</html>

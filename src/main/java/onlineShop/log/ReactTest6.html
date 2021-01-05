@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Promise</h1>
+
+<script type="text/javascript">
+    // 1. what is promise
+    //  async -> in the future
+
+    // 2. why use promise ?
+    //  callback -> async
+    //  callback hell
+    // var arr = [1, 2, 3];
+    //
+    // console.log('hello');
+
+    // arr.forEach(function (item, index) {
+    //     console.log('item -> ', item);
+    //     console.log('index -> ', index);
+    // });
+
+    // setTimeout( function() {
+    //     console.log('2')
+    // }, 1000)
+
+    // ajax({
+    //     method: 'GET',
+    //     url: './person.json',
+    //     success: function(data) {
+    //         // person
+    //         console.log(data)
+    //         ajax({
+    //             method: 'GET',
+    //             url: './car.json',
+    //             success: function(data) {
+    //                 // car
+    //                 console.log(data)
+    //             },
+    //             error: function() {
+    //                 console.log('sth is wrong')
+    //             }
+    //         })
+    //     },
+    //     error: function() {
+    //         console.log('sth is wrong')
+    //     }
+    // })
+
+    // console.log('bye');
+
+    // 3. how to use Promise
+    //  syntax
+    //      - constructor new Promise
+    //      - executor  new Promise((resolver, reject) => {})
+    // console.log(1)
+    // var promise = new Promise((resolve, reject) => {
+    //     console.log('executor');
+    // });
+    // console.log(2)
+
+    // var promise = new Promise((resolve, reject) => {
+    //     // status
+    //     // case1: success
+    //     // case2: failed
+    //
+    //     setTimeout(() => {
+    //         var num = Math.random() * 100;
+    //         console.log(num);
+    //
+    //         num > 60 ? resolve('A') : reject('F');
+    //     }, 1000)
+    // });
+
+    // promise.then( (res) => {
+    //     console.log('success -> ', res)
+    // } , (err) => {
+    //     console.log('failed -> ', err)
+    // })
+
+    // promise.then( data => console.log('success -> ', data))
+    //     .catch( err => console.log('error'))
+
+    function ajax(opt) {
+        var opt = opt || {},
+            method = opt.method || 'GET',
+            url = opt.url,
+            data = opt.data || null,
+            success = opt.success || function() {},
+            error = opt.error || function() {},
+            // step1: create
+            xhr = new XMLHttpRequest();
+
+        // step2: configuration
+        xhr.open(method, url, true);
+
+        // step3: send
+        if(!data) {
+            xhr.send();
+        }
+
+        // step4:
+        xhr.onload = function() {
+            if(xhr.status === 200) {
+                success(JSON.parse(xhr.responseText));
+            } else {
+                error()
+            }
+        }
+
+        xhr.onerror = function () {
+            error();
+        }
+    }
+
+    function promisifyAjax (opt) {
+        var opt = opt || {};
+        console.log(opt)
+        return new Promise(function(resolve, reject) {
+            var method = opt.method || 'GET',
+                url = opt.url,
+                data = opt.data || null,
+                success = opt.success || function() {},
+                error = opt.error || function() {},
+                // step1: create
+                xhr = new XMLHttpRequest();
+
+            // step2: configuration
+            xhr.open(method, url, true);
+
+            // step3: send
+            if(!data) {
+                xhr.send();
+            }
+
+            // step4:
+            xhr.onload = function() {
+                if(xhr.status === 200) {
+                    success(JSON.parse(xhr.responseText));
+                    resolve(JSON.parse(xhr.responseText));
+                } else {
+                    error();
+                    reject('error');
+                }
+            }
+
+            xhr.onerror = function () {
+                error();
+                reject('error')
+            }
+        })
+    }
+
+    promisifyAjax(
+        {
+            method: 'GET',
+            url: './person.json'
+        }
+    ).then( data => {
+        console.log('1 -> ', data);
+        return promisifyAjax({
+            method: 'GET',
+            url: './car.json'
+        });
+    }).then(data2 => {
+        console.log('data2 -> ', data2)
+    })
+</script>
+</body>
+</html>
